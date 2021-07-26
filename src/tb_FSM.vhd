@@ -28,34 +28,46 @@ end process;
 -- run simulation for 240 ns for all cases!
 x_gen: process
 begin
+
+-- wait 1 clock cycle for the MOALU to start
+x_int <= 'U'; wait for 10 ns;
+
+-- stand-by
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 
+-- tx
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 
+-- add
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 
+-- c2
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 
+-- sub
 x_int <= '1'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 
+-- comp
 x_int <= '1'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 
+-- error
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 
+-- rx
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
