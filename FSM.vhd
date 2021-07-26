@@ -21,78 +21,93 @@ begin
             case currentstate is 
                 when START =>
                     case X is 
-                        when "0" => nextstate <= S0; 
-                        when "1" => nextstate <= S1; 
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when S0 =>
                     case X is 
-                        when "0" => nextstate <= S00; 
-                        when "1" => nextstate <= S01; 
+                        when '0' => nextstate <= S00;
+                        when '1' => nextstate <= S01;
+                        when others => nextstate <= ERR;
                     end case;
                 when S1 =>
                     case X is 
-                        when "0" => nextstate <= S10; 
-                        when "1" => nextstate <= S11; 
+                        when '0' => nextstate <= S10;
+                        when '1' => nextstate <= S11;
+                        when others => nextstate <= ERR;
                     end case;
                 when S00 =>
                     case X is 
-                        when "0" => nextstate <= SB; 
-                        when "1" => nextstate <= TX; 
+                        when '0' => nextstate <= SB;
+                        when '1' => nextstate <= TX;
+                        when others => nextstate <= ERR;
                     end case;
                 when S01 =>
                     case X is 
-                        when "0" => nextstate <= ADD; 
-                        when "1" => nextstate <= C2; 
+                        when '0' => nextstate <= ADD;
+                        when '1' => nextstate <= C2;
+                        when others => nextstate <= ERR;
                     end case;
                 when S10 =>
                     case X is 
-                        when "0" => nextstate <= SUB; 
-                        when "1" => nextstate <= COMP; 
+                        when '0' => nextstate <= SUB;
+                        when '1' => nextstate <= COMP;
+                        when others => nextstate <= ERR;
                     end case;
                 when S11 =>
                     case X is 
-                        when "0" => nextstate <= ERR; 
-                        when "1" => nextstate <= RX; 
+                        when '0' => nextstate <= ERR;
+                        when '1' => nextstate <= RX;
+                        when others => nextstate <= ERR;
                     end case;
                 when SB =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when TX =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when ADD =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when C2 =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when SUB =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when COMP =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when ERR =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
                 when RX =>
                     case X is
-                        when "0" => nextstate <= S0;
-                        when "1" => nextstate <= S1;
+                        when '0' => nextstate <= S0;
+                        when '1' => nextstate <= S1;
+                        when others => nextstate <= ERR;
                     end case;
             end case;
         end if; -- end if enable
@@ -111,6 +126,7 @@ begin
         when COMP => finalstate <= "101";
         when ERR => finalstate <= "000";
         when RX => finalstate <= "111";
+        when others => finalstate <= finalstate;
     end case;
 outputstate <= finalstate;
 end process;
