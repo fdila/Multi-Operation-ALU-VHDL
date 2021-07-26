@@ -18,20 +18,31 @@ signal x_int, enable_int, reset_int: std_logic;
 signal clk_int: std_logic;
 signal outint: std_logic_vector(2 downto 0);
 
+-- run simulation for 300 ns for all cases!
 begin
+
 clk_gen: process
 begin
-clk_int <= '1'; wait for 5 ns;
+-- clock must start LOW
 clk_int <= '0'; wait for 5 ns;
+clk_int <= '1'; wait for 5 ns;
 end process;
 
--- run simulation for 240 ns for all cases!
+enable_gen: process
+begin
+enable_int <= '1'; wait for 290 ns;
+enable_int <= '0'; wait for 10 ns;
+end process;
+
+reset_gen: process
+begin
+reset_int <= '1'; wait for 242 ns;
+reset_int <= '0'; wait for 3 ns;
+reset_int <= '1'; wait for 50 ns;
+end process;
+
 x_gen: process
 begin
-
--- wait 1 clock cycle for the MOALU to start
-x_int <= 'U'; wait for 10 ns;
-
 -- stand-by
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
@@ -72,10 +83,11 @@ x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 
+-- rx (after reset)
+x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns;
 end process;
-
-enable_int <= '1';
-reset_int <= '1';
 
 FSM1: FSM port map(x_int, clk_int, enable_int, reset_int, outint);
    
