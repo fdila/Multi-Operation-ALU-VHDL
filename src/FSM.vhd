@@ -11,7 +11,7 @@ end FSM;
 architecture FSM_behav of FSM is
     TYPE statetype IS (START, S0, S1, S00, S01, S11, S10, STANDBY, TX, ADD, C2, SUB, COMP, RX, ERR);
     signal currentstate: statetype := START;
-    signal finalstate: std_logic_vector(2 downto 0); 
+    
 begin
 
 fsm_flow: process(clk, reset)
@@ -19,9 +19,6 @@ variable nextstate: statetype;
 begin
     if reset='0' then
         currentstate <= START;
-        finalstate <= "000";
-	    outputstate <= finalstate;
-
         else if rising_edge(clk) then
             if enable='1' then
                 case currentstate is 
@@ -123,19 +120,23 @@ begin
 end process;
 
 fsm_out: process(currentstate)
+variable finalstate: std_logic_vector(2 downto 0) := "UUU"; 
 begin 
     case currentstate is
-        when STANDBY => finalstate <= "000";
-        when TX => finalstate <= "001";
-        when ADD => finalstate <= "010";
-        when C2 => finalstate <= "011";
-        when SUB => finalstate <= "100";
-        when COMP => finalstate <= "101";
-        when ERR => finalstate <= "000";
-        when RX => finalstate <= "111";
-        when others => finalstate <= finalstate;
+        when START => finalstate := "000";
+        when STANDBY => finalstate := "000";
+        when TX => finalstate := "001";
+        when ADD => finalstate := "010";
+        when C2 => finalstate := "011";
+        when SUB => finalstate := "100";
+        when COMP => finalstate := "101";
+        when ERR => finalstate := "000";
+        when RX => finalstate := "111";
+        when others => null;
     end case;
-outputstate <= finalstate;
+    if (finalstate /= "UUU") then
+        outputstate <= finalstate;
+    end if;
 end process;
 
 end FSM_behav;
