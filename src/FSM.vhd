@@ -9,8 +9,8 @@ entity FSM is
 end FSM;
 
 architecture FSM_behav of FSM is
-    TYPE statetype IS (START, S0, S1, S00, S01, S11, S10, STANDBY, TX, ADD, C2, SUB, COMP, RX, ERR);
-    signal currentstate: statetype := START;
+    TYPE statetype IS (S0, S1, S00, S01, S11, S10, STANDBY, TX, ADD, C2, SUB, COMP, RX, ERR);
+    signal currentstate: statetype := STANDBY;
     
 begin
 
@@ -18,16 +18,10 @@ fsm_flow: process(clk, reset)
 variable nextstate: statetype; 
 begin
     if reset='0' then
-        currentstate <= START;
+        currentstate <= STANDBY;
         else if rising_edge(clk) then
             if enable='1' then
-                case currentstate is 
-                    when START =>
-                        case X is 
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
+                case currentstate is
                     when S0 =>
                         case X is 
                             when '0' => nextstate := S00;
@@ -123,7 +117,6 @@ fsm_out: process(currentstate)
 variable finalstate: std_logic_vector(2 downto 0) := "UUU"; 
 begin 
     case currentstate is
-        when START => finalstate := "000";
         when STANDBY => finalstate := "000";
         when TX => finalstate := "001";
         when ADD => finalstate := "010";
