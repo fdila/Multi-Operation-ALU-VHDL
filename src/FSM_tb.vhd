@@ -32,6 +32,9 @@ x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 end process;
 
-FSM1: FSM port map(x_int, clk_int, '1', '0', outint);
+enable_int <= '1';
+reset_int <= '1';
+
+FSM1: FSM port map(x_int, clk_int, enable_int, reset_int, outint);
    
 end test_FSM_behavior;
