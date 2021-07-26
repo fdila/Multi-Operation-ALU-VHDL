@@ -14,7 +14,7 @@ architecture FSM_behav of FSM is
     signal finalstate: std_logic_vector(2 downto 0); 
 begin
 
-fsm_flow: process(clk)
+fsm_flow: process(clk, reset)
 begin
     if rising_edge(clk) then
         if enable='1' then
@@ -111,8 +111,13 @@ begin
                     end case;
             end case;
         end if; -- end if enable
+        currentstate <= nextstate;
     end if; -- end if rising_edge
-currentstate <= nextstate;
+    
+    if reset='0' then
+        currentstate <= START;
+        finalstate <= "000";
+    end if; -- end if reset
 end process;
 
 fsm_out: process(currentstate)
@@ -129,14 +134,6 @@ begin
         when others => finalstate <= finalstate;
     end case;
 outputstate <= finalstate;
-end process;
-
-fsm_reset: process(reset)
-begin
-    if reset='0' then
-       currentstate <= START;
-       finalstate <= "000";
-    end if; -- end if reset
 end process;
 
 end FSM_behav;
