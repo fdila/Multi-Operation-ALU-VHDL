@@ -45,17 +45,22 @@ x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 
-x_int <= 'Z'; wait for 10 ns;
-
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 
-x_int <= 'Z'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
+
+x_int <= '0'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
 
 x_int <= '1'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
+
 end process;
 
 MOALU1: MOALU 
