@@ -2,8 +2,7 @@
 VHDL project for the course "Informatica Industriale" @unimib
 
 - [ ] MOALU
-    - [ ] FSM
-    - [ ] Decode logic
+    - [x] FSM - da testare TX
     - [x] ALU:
         - [x] ADD
         - [x] C2
@@ -11,7 +10,7 @@ VHDL project for the course "Informatica Industriale" @unimib
         - [x] COMP
     - [ ] Registers:
         - [ ] PIPO
-        - [ ] SIPO
+        - [x] SIPO
         - [ ] PISO
 
 
