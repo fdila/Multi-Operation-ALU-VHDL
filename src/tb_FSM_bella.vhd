@@ -34,21 +34,18 @@ end process;
 
 reset_gen: process
 begin
-reset_int <= '1'; wait for 242 ns;
-reset_int <= '0'; wait for 3 ns;
-reset_int <= '1'; wait for 50 ns;
+reset_int <= '0'; wait for 5 ns;
+reset_int <= '1'; wait for 500 ns;
 end process;
 
 x_gen: process
 begin
-opcode_int <= "000"; wait for 15 ns; -- should ignore this
-opcode_int <= "111"; wait for 10 ns; -- should ignore this
-opcode_int <= "111"; wait for 10 ns; -- should go to rx mode and receive 1 bit
-opcode_int <= "000"; wait for 10 ns; -- should ignore this and receive 2 bit
-opcode_int <= "111"; wait for 10 ns; -- should ignore this and receive 3 bit
-opcode_int <= "000"; wait for 10 ns; -- should ignore this and receive 4 bit
-opcode_int <= "111"; wait for 10 ns; -- should ignore this
-opcode_int <= "111"; wait for 10 ns; -- should ignore this
+opcode_int <= "ZZZ"; wait for 35 ns; -- should ignore this
+opcode_int <= "111"; wait for 10 ns; -- should go to rx mode
+opcode_int <= "ZZZ"; wait for 40 ns; -- ignore (receiving 4 bits)
+opcode_int <= "ZZZ"; wait for 20 ns; -- ignore (receiving 2 op bits)
+opcode_int <= "011"; wait for 10 ns; -- ALU
+opcode_int <= "ZZZ"; wait for 20 ns; -- should ignore this
 opcode_int <= "011"; wait for 10 ns; -- should go to ALU mode
 end process;
 

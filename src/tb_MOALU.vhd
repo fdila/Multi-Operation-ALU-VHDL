@@ -33,9 +33,8 @@ end process;
 
 reset_gen: process
 begin
-reset_int <= '1'; wait for 242 ns;
 reset_int <= '0'; wait for 3 ns;
-reset_int <= '1'; wait for 50 ns;
+reset_int <= '1'; wait for 500 ns;
 end process;
 
 x_gen: process

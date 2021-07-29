@@ -16,12 +16,12 @@ end FSM_bella;
 
 architecture FSM_behav of FSM_bella is
     TYPE statetype IS (WAIT_OP, STANDBY, TX_A, TX_B, ALU, ERR, RX_A, RX_B);
-    signal currentstate :statetype := STANDBY;
-    signal counter :integer := 0;
+    signal currentstate :statetype := WAIT_OP;
 begin
 
 fsm_flow: process(clk, reset)
-variable nextstate: statetype; 
+variable nextstate: statetype;
+variable counter :integer := 0; 
 begin
     if reset='0' then
         currentstate <= STANDBY;
@@ -29,13 +29,12 @@ begin
         if rising_edge(clk) then
             case currentstate is
                 when WAIT_OP =>
-                    counter <= counter + 1;
                     if counter < 2 then
                         nextstate := WAIT_OP;
-                        counter <= counter + 1;
+                        counter := counter + 1;
                     else
                         if counter = 2 then
-                            counter <= 0;
+                            counter := 0;
                             case opcode is
                                 when "000" => nextstate := STANDBY;
                                 when "001" => nextstate := TX_A;
@@ -54,17 +53,17 @@ begin
                 when TX_A =>
                     if counter < Nb - 1 then
                         nextstate := TX_A;
-                        counter <= counter + 1;
+                        counter := counter + 1;
                     else
-                        counter <= 0;
+                        counter := 0;
                         nextstate := TX_B;
                     end if;
                 when TX_B =>
                     if counter < Nb - 1 then
                         nextstate := TX_B;
-                        counter <= counter + 1;
+                        counter := counter + 1;
                     else
-                        counter <= 0;
+                        counter := 0;
                         nextstate := WAIT_OP;
                     end if;
                 when ALU =>
@@ -74,17 +73,17 @@ begin
                 when RX_A =>
                     if counter < Nb - 1 then
                         nextstate := RX_A;
-                        counter <= counter + 1;
+                        counter := counter + 1;
                     else
-                        counter <= 0;
+                        counter := 0;
                         nextstate := RX_B;
                     end if;
                 when RX_B =>
                     if counter < Nb - 1 then
                         nextstate := RX_B;
-                        counter <= counter + 1;
+                        counter := counter + 1;
                     else
-                        counter <= 0;
+                        counter := 0;
                         nextstate := WAIT_OP;
                     end if;
             end case; -- end case currentstate

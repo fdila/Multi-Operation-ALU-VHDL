@@ -13,7 +13,7 @@ end entity sipo;
 
 architecture sipo_behavior of sipo is
     signal data_complete :std_logic := '0';
-begin
+    begin
     clocked_sipo: process (clk, reset) is
         variable temp :std_logic_vector(Nb - 1 downto 0) := (others => '0');
         variable counter :integer := 0;
@@ -38,5 +38,4 @@ begin
                 end if;
             end if;
     end process;
-
-end architecture sipo_behavior;
+end architecture sipo_behavior; 
