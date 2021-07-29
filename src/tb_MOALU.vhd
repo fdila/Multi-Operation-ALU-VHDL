@@ -40,7 +40,7 @@ end process;
 x_gen: process
 begin
 
-x_int <= 'Z'; wait for 15 ns;
+x_int <= 'Z'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;

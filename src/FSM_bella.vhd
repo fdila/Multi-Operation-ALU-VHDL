@@ -15,7 +15,7 @@ entity FSM_bella is
 end FSM_bella;
 
 architecture FSM_behav of FSM_bella is
-    TYPE statetype IS (WAIT_OP, STANDBY, TX_A, TX_B, ALU, ERR, RX_A, RX_B);
+    TYPE statetype IS (WAIT_OP, STANDBY, TX_A, TX_B, ALU, ERR, RX_A, RX_B, PORCODIO);
     signal currentstate :statetype := WAIT_OP;
 begin
 
@@ -44,7 +44,7 @@ begin
                                 when "101" => nextstate := ALU;
                                 when "110" => nextstate := ERR;
                                 when "111" => nextstate := RX_A;
-                                when others => nextstate := ERR;
+                                when others => nextstate := PORCODIO;
                             end case;
                         end if; 
                     end if;
@@ -86,6 +86,8 @@ begin
                         counter := 0;
                         nextstate := WAIT_OP;
                     end if;
+                when PORCODIO =>
+                    null;
             end case; -- end case currentstate
         currentstate <= nextstate;
         end if; -- end if rising edge
@@ -159,6 +161,8 @@ fsm_out: process(currentstate)
                 sipo_A_en <= '0';
                 sipo_B_en <= '1';
                 sipo_opcode_en <= '0';
+            when PORCODIO => 
+                null;
         end case; -- end case currentstate
 end process;
 
