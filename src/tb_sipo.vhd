@@ -17,7 +17,7 @@ component sipo is
 end component;
 
 signal data_in_int :std_logic;
-signal clk_int, reset_int :std_logic;
+signal clk_int, en_int, reset_int :std_logic;
 constant N: integer := 3;
 
 begin
@@ -31,15 +31,25 @@ end process;
 reset_gen: process
 begin
 reset_int <= '1'; wait for 242 ns;
-reset_int <= '0'; wait for 3 ns;
-reset_int <= '1'; wait for 50 ns;
+end process;
+
+en_gen: process
+begin
+en_int <= '0'; wait for 5 ns;
+en_int <= '1'; wait for 30 ns;
+en_int <= '0'; wait for 10 ns;
+en_int <= '1'; wait for 30 ns;
 end process;
 
 data_gen: process
 begin
-data_in_int <= '0'; wait for 15 ns; 
+data_in_int <= 'Z'; wait for 5 ns; 
+data_in_int <= '0'; wait for 10 ns; 
 data_in_int <= '1'; wait for 10 ns; 
 data_in_int <= '0'; wait for 10 ns;
+
+data_in_int <= 'Z'; wait for 10 ns;
+
 data_in_int <= '0'; wait for 10 ns; 
 data_in_int <= '1'; wait for 10 ns; 
 data_in_int <= '1'; wait for 10 ns; 
@@ -47,6 +57,6 @@ end process;
 
 sipoA: sipo 
     generic map (Nb => N)
-    port map(clk_int, reset_int, data_in_int, '1');
+    port map(clk_int, reset_int, data_in_int, en_int);
    
 end tb_sipo_behavior;

@@ -30,10 +30,11 @@ begin
             case currentstate is
                 when WAIT_OP =>
                     counter <= counter + 1;
-                    if counter = 0 then
+                    if counter < 2 then
                         nextstate := WAIT_OP;
+                        counter <= counter + 1;
                     else
-                        if counter = 1 then
+                        if counter = 2 then
                             counter <= 0;
                             case opcode is
                                 when "000" => nextstate := STANDBY;
@@ -110,7 +111,7 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '1';
+                sipo_opcode_en <= '0';
             when TX_A =>
                 ALU_en <= '0';
                 piso_rarb_en <= '1';
@@ -134,7 +135,7 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '1';
+                sipo_opcode_en <= '0';
             when ERR =>
                 ALU_en <= '0';
                 piso_rarb_en <= '0';
