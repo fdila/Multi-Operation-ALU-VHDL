@@ -8,9 +8,11 @@ VHDL project for the course "Informatica Industriale" @unimib
         - [x] C2
         - [x] SUB
         - [x] COMP
-    - [ ] Registers:
-        - [ ] PIPO
+    - [x] Registers:
+        - [x] PIPO
         - [x] SIPO
-        - [ ] PISO
+        - [x] PISO
+
+Controllare edge di clock di riferimento.
 
 
