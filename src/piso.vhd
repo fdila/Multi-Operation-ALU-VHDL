@@ -22,18 +22,17 @@ architecture piso_behavior of piso is
                 data_out <= 'Z';
                 temp := (others => '0');
             else
-                if enable = '1' then
-                    
-                    if (falling_edge(clk)) and write_trans = '1' then
+                if enable = '1' then                  
+                    if (rising_edge(clk)) and write_trans = '1' then
                         temp := data_in;
                         data <= temp;
                         data_out <= temp(Nb-1);
                     end if;
  
-                    if (falling_edge(clk)) and write_trans = '0' then
-                        temp := temp(Nb - 2 downto 0) & '1';
+                    if (rising_edge(clk)) and write_trans = '0' then
+                        temp := '1' & temp(Nb - 2 downto 0) ;
                         data <= temp;
-                        data_out <= temp(Nb-1);
+                        data_out <= temp(0);
                     end if;
 
                 end if;
