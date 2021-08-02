@@ -2,134 +2,195 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity FSM is
-    port(X :in std_logic;
-        clk, enable :in std_logic;
-        reset :in std_logic;
-        outputstate :out std_logic_vector(2 downto 0)); 
+    generic (Nb : integer);
+    port(opcode :in std_logic_vector(2 downto 0);
+        clk, reset :in std_logic;
+        ALU_en :out std_logic := '0';
+        piso_rarb_en :out std_logic :='0';
+        piso_rarb_write :out std_logic :='0';
+        pipo_rout_en :out std_logic := '0';
+        RARB_select :out std_logic := '0';
+        sipo_A_en :out std_logic := '0';
+        sipo_B_en :out std_logic := '0';
+        sipo_opcode_en :out std_logic := '0');
 end FSM;
 
 architecture FSM_behav of FSM is
-    TYPE statetype IS (S0, S1, S00, S01, S11, S10, STANDBY, TX, ADD, C2, SUB, COMP, RX, ERR);
-    signal currentstate: statetype := STANDBY;
-    
+    TYPE statetype IS (WAIT_OP, STANDBY, WRITE_PISO_A, WRITE_PISO_B, TX_A, TX_B, ALU, ERR, RX_A, RX_B);
+    signal currentstate :statetype := WAIT_OP;
 begin
 
 fsm_flow: process(clk, reset)
-variable nextstate: statetype; 
+variable nextstate: statetype;
+variable counter :integer := 0; 
 begin
     if reset='0' then
         currentstate <= STANDBY;
-        else if rising_edge(clk) then
-            if enable='1' then
-                case currentstate is
-                    when S0 =>
-                        case X is 
-                            when '0' => nextstate := S00;
-                            when '1' => nextstate := S01;
-                            when others => nextstate := ERR;
-                        end case;
-                    when S1 =>
-                        case X is 
-                            when '0' => nextstate := S10;
-                            when '1' => nextstate := S11;
-                            when others => nextstate := ERR;
-                        end case;
-                    when S00 =>
-                        case X is 
-                            when '0' => nextstate := STANDBY;
-                            when '1' => nextstate := TX;
-                            when others => nextstate := ERR;
-                        end case;
-                    when S01 =>
-                        case X is 
-                            when '0' => nextstate := ADD;
-                            when '1' => nextstate := C2;
-                            when others => nextstate := ERR;
-                        end case;
-                    when S10 =>
-                        case X is 
-                            when '0' => nextstate := SUB;
-                            when '1' => nextstate := COMP;
-                            when others => nextstate := ERR;
-                        end case;
-                    when S11 =>
-                        case X is 
-                            when '0' => nextstate := ERR;
-                            when '1' => nextstate := RX;
-                            when others => nextstate := ERR;
-                        end case;
-                    when STANDBY =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                    when TX =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                    when ADD =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                    when C2 =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                    when SUB =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                    when COMP =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                    when ERR =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                    when RX =>
-                        case X is
-                            when '0' => nextstate := S0;
-                            when '1' => nextstate := S1;
-                            when others => nextstate := ERR;
-                        end case;
-                end case;
-            end if; -- end if enable
+    else 
+        if rising_edge(clk) then
+            case currentstate is
+                when WAIT_OP =>
+                    if counter < 2 then
+                        nextstate := WAIT_OP;
+                        counter := counter + 1;
+                    else
+                        if counter = 2 then
+                            counter := 0;
+                            case opcode is
+                                when "000" => nextstate := STANDBY;
+                                when "001" => nextstate := WRITE_PISO_A;
+                                when "010" => nextstate := ALU;
+                                when "011" => nextstate := ALU;
+                                when "100" => nextstate := ALU;
+                                when "101" => nextstate := ALU;
+                                when "110" => nextstate := ERR;
+                                when "111" => nextstate := RX_A;
+                                when others => nextstate := ERR;
+                            end case;
+                        end if; 
+                    end if;
+                when STANDBY =>
+                    nextstate := WAIT_OP;
+                when WRITE_PISO_A =>
+                    nextstate := TX_A;
+                when WRITE_PISO_B =>
+                    nextstate := TX_B;
+                when TX_A =>
+                    if counter < Nb - 1 then
+                        nextstate := TX_A;
+                        counter := counter + 1;
+                    else
+                        counter := 0;
+                        nextstate := WRITE_PISO_B;
+                    end if;
+                when TX_B =>
+                    if counter < Nb - 1 then
+                        nextstate := TX_B;
+                        counter := counter + 1;
+                    else
+                        counter := 0;
+                        nextstate := WAIT_OP;
+                    end if;
+                when ALU =>
+                    nextstate := WAIT_OP;
+                when ERR =>
+                    nextstate := WAIT_OP;
+                when RX_A =>
+                    if counter < Nb - 1 then
+                        nextstate := RX_A;
+                        counter := counter + 1;
+                    else
+                        counter := 0;
+                        nextstate := RX_B;
+                    end if;
+                when RX_B =>
+                    if counter < Nb - 1 then
+                        nextstate := RX_B;
+                        counter := counter + 1;
+                    else
+                        counter := 0;
+                        nextstate := WAIT_OP;
+                    end if;
+            end case; -- end case currentstate
         currentstate <= nextstate;
-        end if; -- end else if
-    end if; -- end if 
+        end if; -- end if rising edge
+    end if; -- end if reset
 end process;
 
 fsm_out: process(currentstate)
-variable finalstate: std_logic_vector(2 downto 0) := "UUU"; 
-begin 
-    case currentstate is
-        when STANDBY => finalstate := "000";
-        when TX => finalstate := "001";
-        when ADD => finalstate := "010";
-        when C2 => finalstate := "011";
-        when SUB => finalstate := "100";
-        when COMP => finalstate := "101";
-        when ERR => finalstate := "000";
-        when RX => finalstate := "111";
-        when others => null;
-    end case;
-    if (finalstate /= "UUU") then
-        outputstate <= finalstate;
-    end if;
+    begin 
+        case currentstate is
+            when WAIT_OP =>
+                ALU_en <= '0';
+                piso_rarb_en <= '0';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '1';
+            when STANDBY =>
+                ALU_en <= '0';
+                piso_rarb_en <= '0';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '0';
+            when WRITE_PISO_A =>
+                ALU_en <= '0';
+                piso_rarb_en <= '1';
+                piso_rarb_write <= '1';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '0';
+            when WRITE_PISO_B =>
+                ALU_en <= '0';
+                piso_rarb_en <= '1';
+                piso_rarb_write <= '1';
+                pipo_rout_en <= '0';
+                RARB_select <= '1';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '0';
+            when TX_A =>
+                ALU_en <= '0';
+                piso_rarb_en <= '1';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '0';
+            when TX_B =>
+                ALU_en <= '0';
+                piso_rarb_en <= '1';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '0';
+            when ALU =>
+                ALU_en <= '1';
+                piso_rarb_en <= '0';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '1';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '0';
+            when ERR =>
+                ALU_en <= '0';
+                piso_rarb_en <= '0';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '1';
+            when RX_A =>
+                ALU_en <= '0';
+                piso_rarb_en <= '0';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '1';
+                sipo_B_en <= '0';
+                sipo_opcode_en <= '0';
+            when RX_B =>
+                ALU_en <= '0';
+                piso_rarb_en <= '0';
+                piso_rarb_write <= '0';
+                pipo_rout_en <= '0';
+                RARB_select <= '0';
+                sipo_A_en <= '0';
+                sipo_B_en <= '1';
+                sipo_opcode_en <= '0';
+        end case; -- end case currentstate
 end process;
 
 end FSM_behav;

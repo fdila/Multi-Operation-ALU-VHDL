@@ -33,7 +33,7 @@ architecture MOALU_behavior of MOALU is
 		);
     end component;
 
-	component FSM_bella is
+	component FSM is
 		generic (Nb : integer);
         port(opcode :in std_logic_vector(2 downto 0);
             clk, reset :in std_logic;
@@ -109,7 +109,7 @@ architecture MOALU_behavior of MOALU is
 			generic map(Nb)
             port map(clk, reset, x, sipo_B_en, sipo_b_out);
 
-	    fsm_is : FSM_bella
+	    fsm_is : FSM
 			generic map(Nb)
             port map(opcode_int, clk, reset, ALU_en, piso_rarb_en, piso_rarb_write, pipo_rout_en, RARB_select, sipo_A_en, sipo_B_en, sipo_opcode_en);
         
