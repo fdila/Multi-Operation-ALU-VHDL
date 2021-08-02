@@ -15,7 +15,7 @@ end entity ALU;
 
 architecture ALU_behavior of ALU is
 begin
-    process (enable) is
+    process (a, b, opcode, B_A, enable) is
         variable temp :unsigned(Nb - 1 downto 0) := (others => '0');
         begin
             if (enable = '1') then
