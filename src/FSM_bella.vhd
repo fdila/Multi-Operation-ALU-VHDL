@@ -7,6 +7,7 @@ entity FSM_bella is
         clk, reset :in std_logic;
         ALU_en :out std_logic := '0';
         piso_rarb_en :out std_logic :='0';
+        piso_rarb_write :out std_logic :='0';
         pipo_rout_en :out std_logic := '0';
         RARB_select :out std_logic := '0';
         sipo_A_en :out std_logic := '0';
@@ -130,7 +131,7 @@ fsm_out: process(currentstate)
             when ALU =>
                 ALU_en <= '1';
                 piso_rarb_en <= '0';
-                pipo_rout_en <= '0';
+                pipo_rout_en <= '1';
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
