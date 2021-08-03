@@ -17,7 +17,7 @@ architecture pipo_behavior of pipo is
         variable temp :std_logic_vector(Nb - 1 downto 0) := (others => '0');
         begin
             if (reset = '0') then
-                data_out <= (others => 'Z');
+                data_out <= (others => '0');
                 temp := (others => '0');
             else
                 if (falling_edge(clk)) then

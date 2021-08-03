@@ -19,7 +19,7 @@ architecture sipo_behavior of sipo is
         variable counter :integer := 0;
         begin
             if (reset = '0') then
-                data_out <= (others => 'Z');
+                data_out <= (others => '0');
                 temp := (others => '0');
                 counter := 0;
             else

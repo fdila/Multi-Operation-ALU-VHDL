@@ -19,7 +19,7 @@ architecture piso_behavior of piso is
         variable temp :std_logic_vector(Nb - 1 downto 0) := (others => '0');
         begin
             if (reset = '0') then
-                data_out <= 'Z';
+                data_out <= '0';
                 temp := (others => '0');
             else
                 if enable = '1' then                  
