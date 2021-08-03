@@ -1,8 +1,9 @@
 # Multi-Operation-ALU-VHDL
+
 VHDL project for the course "Informatica Industriale" @unimib
 
-- [ ] MOALU
-    - [x] FSM - da testare TX
+- [x] MOALU
+    - [x] FSM
     - [x] ALU:
         - [x] ADD
         - [x] C2
@@ -12,7 +13,4 @@ VHDL project for the course "Informatica Industriale" @unimib
         - [x] PIPO
         - [x] SIPO
         - [x] PISO
-
-Controllare edge di clock di riferimento.
-
 
