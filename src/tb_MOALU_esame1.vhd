@@ -1,10 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
  
-entity tb_MOALU is
-end tb_MOALU;
+entity tb_MOALU_1 is
+end tb_MOALU_1;
     
-architecture tb_MOALU_behavior of tb_MOALU is
+architecture tb_MOALU_behavior of tb_MOALU_1 is
     
 component MOALU is
     generic ( Nb : integer) ;
@@ -59,7 +59,7 @@ x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns; -- ALU ADD
 
-x_int <= '0'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns; -- wait for alu
 
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;

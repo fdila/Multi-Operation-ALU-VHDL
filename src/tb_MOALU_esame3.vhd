@@ -1,10 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
  
-entity tb_MOALU is
-end tb_MOALU;
+entity tb_MOALU_3 is
+end tb_MOALU_3;
     
-architecture tb_MOALU_behavior of tb_MOALU is
+architecture tb_MOALU_behavior of tb_MOALU_3 is
     
 component MOALU is
     generic ( Nb : integer) ;
@@ -37,36 +37,45 @@ reset_int <= '0'; wait for 3 ns;
 reset_int <= '1'; wait for 500 ns;
 end process;
 
--- TODO: STANDBY -> RX -> COMP -> TX
+-- STANDBY -> RX -> COMP -> TX
+-- run for 280 ns
 x_gen: process
 begin
-x_int <= 'Z'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
-
-x_int <= '0'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
-
-x_int <= '1'; wait for 10 ns;
-x_int <= '0'; wait for 10 ns;
-x_int <= '0'; wait for 10 ns;
-
-x_int <= '0'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
-x_int <= '0'; wait for 10 ns;
-
 x_int <= '0'; wait for 10 ns;
 
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns; -- STANDBY
 
+x_int <= '0'; wait for 10 ns; -- wait for standby cycle
+
+x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- RX
+
+x_int <= '1'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- A
+
+x_int <= '1'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- B
+
+x_int <= '1'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- ALU COMP
+
+x_int <= '0'; wait for 10 ns; -- wait for alu
+
+x_int <= '0'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- TX
+
+x_int <= '0'; wait for 2*10 ns;
+x_int <= '0'; wait for N*2*10 ns; -- wait for transmission
 end process;
 
 MOALU1: MOALU 
     generic map (Nb => N)
     port map(x_int, clk_int, reset_int, B_A);
-   
 end tb_MOALU_behavior;
