@@ -12,7 +12,7 @@ component piso is
 		clk, reset : in std_logic;
 		data_in : in std_logic_vector(Nb - 1 downto 0) := (others => '0');
 		enable : in std_logic;
-        write_trans : in std_logic := '1';
+        write_trans : in std_logic;
 		data_out : out std_logic
 		);
 end component;
@@ -20,7 +20,7 @@ end component;
 constant N: integer := 3;
 signal data_in :std_logic_vector(N - 1 downto 0);
 signal clk_int, en_int, reset_int :std_logic;
-signal write_trans_int :std_logic := '1';
+signal write_trans_int :std_logic;
 
 begin
 clk_gen: process
