@@ -20,7 +20,7 @@ architecture pipo_behavior of pipo is
                 data_out <= (others => '0');
                 temp := (others => '0');
             else
-                if (falling_edge(clk)) then
+                if (rising_edge(clk)) then
                     if enable = '1' then
                         temp := data_in;
                         data_out <= temp;
