@@ -23,7 +23,7 @@ architecture sipo_behavior of sipo is
                 temp := (others => '0');
                 counter := 0;
             else
-                if (falling_edge(clk)) then
+                if (rising_edge(clk)) then
                     if enable = '1' then
                         if counter < Nb then
                             counter := counter + 1;

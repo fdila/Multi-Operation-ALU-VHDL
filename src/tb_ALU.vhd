@@ -11,7 +11,7 @@ component ALU is
     generic(Nb : integer);
 	port(
         a,b :in std_logic_vector(Nb - 1 downto 0);
-        opcode :in std_logic_vector(2 downto 0);
+        opcode :in std_logic_vector(1 downto 0);
         B_A :in std_logic;
 		enable : in std_logic;
 		result : out std_logic_vector(Nb - 1 downto 0) := (others => '0')
@@ -20,7 +20,7 @@ end component;
 
 constant N: integer := 3;
 signal a_int, b_int :std_logic_vector(N - 1 downto 0);
-signal opcode_int :std_logic_vector(2 downto 0);
+signal opcode_int :std_logic_vector(1 downto 0);
 signal B_A_int, en_int :std_logic;
 
 
@@ -40,16 +40,16 @@ end process;
 
 opcode_gen: process
 begin
-opcode_int <= "010"; wait for 10 ns; --add
+opcode_int <= "00"; wait for 10 ns; --add
 
-opcode_int <= "011"; wait for 10 ns; --C2
-opcode_int <= "011"; wait for 10 ns; --C2
+opcode_int <= "01"; wait for 10 ns; --C2
+opcode_int <= "01"; wait for 10 ns; --C2
 
-opcode_int <= "100"; wait for 10 ns; --sub
-opcode_int <= "100"; wait for 10 ns; --sub
+opcode_int <= "10"; wait for 10 ns; --sub
+opcode_int <= "10"; wait for 10 ns; --sub
 
-opcode_int <= "101"; wait for 10 ns; --comp
-opcode_int <= "101"; wait for 10 ns; --comp
+opcode_int <= "11"; wait for 10 ns; --comp
+opcode_int <= "11"; wait for 10 ns; --comp
 end process;
 
 B_A_gen: process

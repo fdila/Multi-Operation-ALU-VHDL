@@ -6,13 +6,13 @@ entity FSM is
     port(x :in std_logic := '0';
         clk, reset :in std_logic;
         ALU_en :out std_logic := '0';
+        alu_op :out std_logic_vector(1 downto 0) := (others => '0');
+        RARB_select :out std_logic := '0';
         piso_rarb_en :out std_logic :='0';
         piso_rarb_write :out std_logic :='0';
         pipo_rout_en :out std_logic := '0';
-        RARB_select :out std_logic := '0';
         sipo_A_en :out std_logic := '0';
-        sipo_B_en :out std_logic := '0';
-        sipo_opcode_en :out std_logic := '0');
+        sipo_B_en :out std_logic := '0');
 end FSM;
 
 architecture FSM_behav of FSM is
@@ -43,10 +43,10 @@ begin
                         case opcode is
                             when "000" => nextstate := STANDBY;
                             when "001" => nextstate := WRITE_PISO_A;
-                            when "010" => nextstate := ALU;
-                            when "011" => nextstate := ALU;
-                            when "100" => nextstate := ALU;
-                            when "101" => nextstate := ALU;
+                            when "010" => nextstate := ALU; alu_op <= "00";
+                            when "011" => nextstate := ALU; alu_op <= "01";
+                            when "100" => nextstate := ALU; alu_op <= "10";
+                            when "101" => nextstate := ALU; alu_op <= "11";
                             when "110" => nextstate := ERR;
                             when "111" => nextstate := RX_A;
                             when others => nextstate := ERR;
@@ -113,7 +113,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '1';
             when STANDBY =>
                 ALU_en <= '0';
                 piso_rarb_en <= '0';
@@ -122,7 +121,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '0';
             when WRITE_PISO_A =>
                 ALU_en <= '0';
                 piso_rarb_en <= '1';
@@ -131,7 +129,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '0';
             when WRITE_PISO_B =>
                 ALU_en <= '0';
                 piso_rarb_en <= '1';
@@ -140,7 +137,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '1';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '0';
             when TX_A =>
                 ALU_en <= '0';
                 piso_rarb_en <= '1';
@@ -149,7 +145,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '0';
             when TX_B =>
                 ALU_en <= '0';
                 piso_rarb_en <= '1';
@@ -158,7 +153,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '0';
             when ALU =>
                 ALU_en <= '1';
                 piso_rarb_en <= '0';
@@ -167,7 +161,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '0';
             when ERR =>
                 ALU_en <= '0';
                 piso_rarb_en <= '0';
@@ -176,7 +169,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '1';
             when RX_A =>
                 ALU_en <= '0';
                 piso_rarb_en <= '0';
@@ -185,7 +177,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '1';
                 sipo_B_en <= '0';
-                sipo_opcode_en <= '0';
             when RX_B =>
                 ALU_en <= '0';
                 piso_rarb_en <= '0';
@@ -194,7 +185,6 @@ fsm_out: process(currentstate)
                 RARB_select <= '0';
                 sipo_A_en <= '0';
                 sipo_B_en <= '1';
-                sipo_opcode_en <= '0';
         end case; -- end case currentstate
 end process;
 

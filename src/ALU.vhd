@@ -6,7 +6,7 @@ entity ALU is
 	generic(Nb : integer);
 	port(
         a,b :in std_logic_vector(Nb - 1 downto 0);
-        opcode :in std_logic_vector(2 downto 0);
+        opcode :in std_logic_vector(1 downto 0);
         B_A :in std_logic;
 		enable : in std_logic;
 		result : out std_logic_vector(Nb - 1 downto 0) := (others => '0')
@@ -20,9 +20,9 @@ begin
         begin
             if (enable = '1') then
                 case opcode is
-                    when "010" =>
+                    when "00" =>
                         temp := unsigned(a) + unsigned(b);
-                    when "011" =>
+                    when "01" =>
                         if B_A = '0' then
                             temp := unsigned(not a) + 1;
                         else
@@ -30,7 +30,7 @@ begin
                                 temp := unsigned(not b) + 1;
                             end if;
                         end if;
-                    when "100" =>
+                    when "10" =>
                         if B_A = '0' then
                             temp := unsigned(a) + (unsigned((not B)) + 1);
                         else
@@ -38,7 +38,7 @@ begin
                                 temp := unsigned(b) +  (unsigned((not A)) + 1);
                             end if;
                         end if;
-                    when "101" =>
+                    when "11" =>
                         if A = B then
                             temp := (others => '0');
                             temp := temp + 1;
