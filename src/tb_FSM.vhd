@@ -8,7 +8,7 @@ architecture tb_FSM_behavior of tb_FSM is
     
 component FSM is
     generic (Nb : integer);
-    port(opcode :in std_logic_vector(2 downto 0);
+    port(x :in std_logic;
         clk, reset :in std_logic;
         ALU_en :out std_logic;
         piso_rarb_en :out std_logic;
@@ -19,8 +19,7 @@ component FSM is
         sipo_opcode_en :out std_logic);
 end component;
 
-signal opcode_int :std_logic_vector(2 downto 0);
-signal clk_int, reset_int :std_logic;
+signal x_int, clk_int, reset_int :std_logic;
 constant N: integer := 2;
 
 begin
@@ -34,23 +33,29 @@ end process;
 
 reset_gen: process
 begin
-reset_int <= '0'; wait for 5 ns;
+reset_int <= '0'; wait for 2 ns;
 reset_int <= '1'; wait for 500 ns;
 end process;
 
 x_gen: process
 begin
-opcode_int <= "ZZZ"; wait for 35 ns; -- should ignore this
-opcode_int <= "111"; wait for 10 ns; -- should go to rx mode
-opcode_int <= "ZZZ"; wait for 40 ns; -- ignore (receiving 4 bits)
-opcode_int <= "ZZZ"; wait for 20 ns; -- ignore (receiving 2 op bits)
-opcode_int <= "011"; wait for 10 ns; -- ALU
-opcode_int <= "ZZZ"; wait for 20 ns; -- should ignore this
-opcode_int <= "011"; wait for 10 ns; -- should go to ALU mode
+x_int <= '0'; wait for 10 ns;
+
+x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- should go in rx
+
+x_int <= '0'; wait for 40 ns; -- wait for rx to finish
+
+x_int <= '0'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- should go in ALU
+
+
 end process;
 
 FSM1: FSM 
     generic map (Nb => N)
-    port map(opcode_int, clk_int, reset_int);
+    port map(x_int, clk_int, reset_int);
    
 end tb_FSM_behavior;

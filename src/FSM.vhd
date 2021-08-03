@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 
 entity FSM is
     generic (Nb : integer);
-    port(opcode :in std_logic_vector(2 downto 0);
+    port(x :in std_logic := '0';
         clk, reset :in std_logic;
         ALU_en :out std_logic := '0';
         piso_rarb_en :out std_logic :='0';
@@ -18,11 +18,14 @@ end FSM;
 architecture FSM_behav of FSM is
     TYPE statetype IS (WAIT_OP, STANDBY, WRITE_PISO_A, WRITE_PISO_B, TX_A, TX_B, ALU, ERR, RX_A, RX_B);
     signal currentstate :statetype := WAIT_OP;
+    signal op_debug :std_logic_vector(2 downto 0) := (others => '0');
 begin
 
 fsm_flow: process(clk, reset)
 variable nextstate: statetype;
 variable counter :integer := 0; 
+variable opcode :std_logic_vector(2 downto 0) := (others => '0');
+
 begin
     if reset='0' then
         currentstate <= STANDBY;
@@ -30,24 +33,26 @@ begin
         if rising_edge(clk) then
             case currentstate is
                 when WAIT_OP =>
-                    if counter < 2 then
+                    if counter < 3 then
                         nextstate := WAIT_OP;
+                        opcode := opcode(1 downto 0) & x;
+                        op_debug <= opcode;
                         counter := counter + 1;
-                    else
-                        if counter = 2 then
-                            counter := 0;
-                            case opcode is
-                                when "000" => nextstate := STANDBY;
-                                when "001" => nextstate := WRITE_PISO_A;
-                                when "010" => nextstate := ALU;
-                                when "011" => nextstate := ALU;
-                                when "100" => nextstate := ALU;
-                                when "101" => nextstate := ALU;
-                                when "110" => nextstate := ERR;
-                                when "111" => nextstate := RX_A;
-                                when others => nextstate := ERR;
-                            end case;
-                        end if; 
+                    end if;
+                    if counter = 3 then
+                        case opcode is
+                            when "000" => nextstate := STANDBY;
+                            when "001" => nextstate := WRITE_PISO_A;
+                            when "010" => nextstate := ALU;
+                            when "011" => nextstate := ALU;
+                            when "100" => nextstate := ALU;
+                            when "101" => nextstate := ALU;
+                            when "110" => nextstate := ERR;
+                            when "111" => nextstate := RX_A;
+                            when others => nextstate := ERR;
+                        end case;
+                        counter := 0;
+                        opcode := (others => '0');
                     end if;
                 when STANDBY =>
                     nextstate := WAIT_OP;
