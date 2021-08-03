@@ -37,6 +37,8 @@ reset_int <= '0'; wait for 3 ns;
 reset_int <= '1'; wait for 500 ns;
 end process;
 
+-- RX -> SUM -> TX
+-- run for 250 ns
 x_gen: process
 begin
 x_int <= '0'; wait for 10 ns;
