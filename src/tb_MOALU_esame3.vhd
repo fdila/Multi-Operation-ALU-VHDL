@@ -71,7 +71,6 @@ x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns; -- TX
 
-x_int <= '0'; wait for 2*10 ns;
 x_int <= '0'; wait for N*2*10 ns; -- wait for transmission
 end process;
 

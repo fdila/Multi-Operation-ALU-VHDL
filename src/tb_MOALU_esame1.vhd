@@ -38,7 +38,7 @@ reset_int <= '1'; wait for 500 ns;
 end process;
 
 -- RX -> SUM -> TX
--- run for 250 ns
+-- run for 230 ns
 x_gen: process
 begin
 x_int <= '0'; wait for 10 ns;
@@ -65,7 +65,6 @@ x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns; -- TX
 
-x_int <= '0'; wait for 2*10 ns;
 x_int <= '0'; wait for N*2*10 ns; -- wait for transmission
 end process;
 

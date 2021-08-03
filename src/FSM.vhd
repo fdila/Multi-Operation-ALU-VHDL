@@ -61,7 +61,7 @@ begin
                 when WRITE_PISO_B =>
                     nextstate := TX_B;
                 when TX_A =>
-                    if counter < Nb - 1 then
+                    if counter < Nb - 2 then
                         nextstate := TX_A;
                         counter := counter + 1;
                     else
@@ -69,7 +69,7 @@ begin
                         nextstate := WRITE_PISO_B;
                     end if;
                 when TX_B =>
-                    if counter < Nb - 1 then
+                    if counter < Nb - 2 then
                         nextstate := TX_B;
                         counter := counter + 1;
                     else
