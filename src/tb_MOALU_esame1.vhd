@@ -37,36 +37,39 @@ reset_int <= '0'; wait for 3 ns;
 reset_int <= '1'; wait for 500 ns;
 end process;
 
-
--- TODO: RX -> SUM -> TX
+-- RX -> SUM -> TX
+-- run for 250 ns
 x_gen: process
 begin
-x_int <= 'Z'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns;
+
 x_int <= '1'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- RX
 
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- A
 
 x_int <= '1'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
-x_int <= '0'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns; -- B
 
 x_int <= '0'; wait for 10 ns;
 x_int <= '1'; wait for 10 ns;
-x_int <= '0'; wait for 10 ns;
+x_int <= '0'; wait for 10 ns; -- ALU ADD
 
 x_int <= '0'; wait for 10 ns;
 
 x_int <= '0'; wait for 10 ns;
 x_int <= '0'; wait for 10 ns;
-x_int <= '1'; wait for 10 ns;
+x_int <= '1'; wait for 10 ns; -- TX
+
+x_int <= '0'; wait for 2*10 ns;
+x_int <= '0'; wait for N*2*10 ns; -- wait for transmission
 end process;
 
 MOALU1: MOALU 
     generic map (Nb => N)
     port map(x_int, clk_int, reset_int, B_A);
-   
 end tb_MOALU_behavior;
